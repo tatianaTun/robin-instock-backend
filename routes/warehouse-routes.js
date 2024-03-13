@@ -1,5 +1,5 @@
 const express = require("express").Router();
-const warehouseController = require("../controllers/warehouseController");
+const warehouseController = require("../controllers/warehouse-controller");
 
 router.route("/:id").get(warehouseController.getWarehousesById);
 
