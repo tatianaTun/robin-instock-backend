@@ -74,8 +74,29 @@ const getWarehousesById = async (req, res) => {
   }
 };
 
+const inventories = async (req, res) => {
+  try {
+    const inventories = await knex("inventories")
+      .where({ warehouse_id: req.params.id })
+      .select("id", "item_name", "category", "status", "quantity"); // Specify only the columns we want
+
+    if (inventories === 0) {
+      return res.status(404).json({
+        message: `Warehouse with ID ${req.params.id} not found`,
+      });
+    }
+
+    res.json(inventories);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to retrieve inventories for warehouse with ID ${req.params.id}: ${error}`,
+    });
+  }
+};
+
 module.exports = {
   index,
   update,
+  inventories,
   getWarehousesById,
 };
