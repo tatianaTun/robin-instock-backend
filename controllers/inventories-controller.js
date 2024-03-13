@@ -5,7 +5,7 @@ const add = async (req, res) => {
     if (!req.body.warehouse_id || !req.body.item_name || !req.body.description || !req.body.category || !req.body.status || !req.body.quantity) {
 
         return res.status(400).json({
-            message: "Please provide values for all fields",
+            message: "Please provide values for all fields: warehouse_id, item_name, description, category, status and quantity",
         });
     } else if (Number.isNaN(Number(req.body.quantity))) {
         return res.status(400).json({
