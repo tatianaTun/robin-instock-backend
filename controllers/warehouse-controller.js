@@ -1,4 +1,6 @@
 const knex = require("knex")(require("../knexfile"));
+const validator = require("validator"); //validate emails
+const { phone } = require("phone"); // validate phone numbers
 
 const index = async (_req, res) => {
   try {
@@ -10,6 +12,26 @@ const index = async (_req, res) => {
 };
 
 const update = async (req, res) => {
+  if (
+    !req.body.warehouse_name ||
+    !req.body.address ||
+    !req.body.city ||
+    !req.body.country ||
+    !req.body.contact_name ||
+    !req.body.contact_position ||
+    !req.body.contact_phone ||
+    !req.body.contact_email
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Please fill out all required information" });
+  } else if (!validator.isEmail(req.body.contact_email)) {
+    return res.status(400).json({ message: "Invalid email address" });
+  } 
+//   else if () {
+//     return res.status(400).json({ message: "Invalid phone number" });
+//   }
+
   try {
     const rowsUpdated = await knex("warehouses")
       .where({ id: req.params.id })
