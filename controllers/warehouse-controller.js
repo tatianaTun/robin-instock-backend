@@ -26,7 +26,7 @@ const create = async (req, res) => {
         const result = await knex('warehouses').insert(req.body);
         console.log('Inserted result: ', result);
         const rowId = result[0]
-        const newWarehouse = await knex('warehouses').where({ id: rowId });
+        const newWarehouse = await knex('warehouses').where({ id: rowId }).first();
         res.status(201).json(newWarehouse);
     } catch (err) {
         console.error(err);
