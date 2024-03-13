@@ -1,9 +1,6 @@
 const knex = require("knex")(require("../knexfile"));
 
 const updateInventoryById = async (req, res) => {
-  const { warehouse_id, item_name, description, category, status, quantity } =
-    req.body;
-
   if (
     !req.body.warehouse_id ||
     !req.body.item_name ||
@@ -14,11 +11,23 @@ const updateInventoryById = async (req, res) => {
   ) {
     return res
       .status(400)
-      .json({ message: "Please provide all required information" });
+      .json({ message: "Please fill out all required information" });
+  } else if (Number.isNaN(Number(req.body.quantity))) {
+    return res.status(400).json({
+      message: "Please provide a valid number for quantity",
+    });
   }
 
   try {
-    const inventoryUpdated = await knex("inventory")
+    const warehouse = await knex("warehouses").where({
+      id: req.body.warehouse_id,
+    });
+    if (!warehouse) {
+      return res.status(400).json({
+        message: `Warehouse ID ${req.params.warehouse_id} does not exist`,
+      });
+    }
+    const inventoryUpdated = await knex("inventories")
       .where({
         id: req.params.id,
       })
@@ -29,10 +38,11 @@ const updateInventoryById = async (req, res) => {
         .status(404)
         .json({ message: `Inventory with ID ${req.params.id} not found` });
     }
-    const updatedRow = await knex("inventory").where({
+    const updatedRow = await knex("inventories").where({
       id: req.params.id,
     });
-    res.json(updatedRow[0]);
+
+    res.status(200).json(updatedRow[0]);
   } catch (error) {
     res.status(500).json({
       message: `Unable to update inventory with ID ${req.params.id}: ${error}`,
