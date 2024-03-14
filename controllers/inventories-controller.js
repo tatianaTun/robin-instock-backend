@@ -94,8 +94,25 @@ const updateInventoryById = async (req, res) => {
     });
   }
 };
+
+const deleteInventoryById = async (req, res) => {
+  try {
+      const deletedRows = await knex('inventories').where({ id: req.params.id }).delete();
+      if (deletedRows === 0) {
+          return res.status(404).json({ message: "Inventory not found" });
+      }
+      res.sendStatus(204);
+  } catch (err) {
+    
+      res.status(500).json(err);
+  }
+}
+
+
+
 module.exports = {
   add,
   updateInventoryById,
-  index
+  index,
+  deleteInventoryById
 };
