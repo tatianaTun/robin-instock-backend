@@ -12,17 +12,14 @@ const create = async (req, res) => {
         !req.body.contact_position) {
         return res.status(400).json({ message: "Please provide all data fileds" });
     }
-
     // validation for contact_phone
     if (!req.body.contact_phone) {
         return res.status(400).json({ message: "Please enter a valid phone contact" });
     }
-
     // validation for contact_email
     if (!req.body.contact_email) {
         return res.status(400).json({ message: "Please enter a valid email address" });
     }
-
     try {
         const result = await knex('warehouses').insert(req.body);
         console.log('Inserted result: ', result);
@@ -34,7 +31,6 @@ const create = async (req, res) => {
         res.status(500).json(err);
     }
 }
-
 // Delete a warehouse
 const remove = async (req, res) => {
     try {
@@ -42,15 +38,12 @@ const remove = async (req, res) => {
         if (deletedRows === 0) {
             return res.status(404).json({ message: "Warehouse not found" });
         }
-
         res.sendStatus(204);
     } catch (err) {
         console.error(err);
         res.status(500).json(err);
     }
 }
-
-
 const index = async (_req, res) => {
   try {
     const data = await knex("warehouses");
@@ -59,7 +52,6 @@ const index = async (_req, res) => {
     res.status(400).send(`Error retrieving warehouses: ${err}`);
   }
 };
-
 const update = async (req, res) => {
   if (
     !req.body.warehouse_name ||
@@ -77,25 +69,18 @@ const update = async (req, res) => {
   } else if (!validator.isEmail(req.body.contact_email)) {
     return res.status(400).json({ message: "Invalid email address" });
   }
-  //   else if () {
-  //     return res.status(400).json({ message: "Invalid phone number" });
-  //   }
-
   try {
     const rowsUpdated = await knex("warehouses")
       .where({ id: req.params.id })
       .update(req.body);
-
     if (rowsUpdated === 0) {
       return res.status(404).json({
         message: `Warehouse with ID ${req.params.id} not found`,
       });
     }
-
     const updatedWarehouse = await knex("warehouses").where({
       id: req.params.id,
     });
-
     res.json(updatedWarehouse[0]);
   } catch (error) {
     res.status(500).json({
@@ -108,7 +93,6 @@ const getWarehousesById = async (req, res) => {
     const warehouseIdFound = await knex("warehouses").where({
       id: req.params.id,
     });
-
     if (warehouseIdFound.length === 0) {
       return res
         .status(404)
@@ -122,19 +106,16 @@ const getWarehousesById = async (req, res) => {
     });
   }
 };
-
 const inventories = async (req, res) => {
   try {
     const inventories = await knex("inventories")
       .where({ warehouse_id: req.params.id })
       .select("id", "item_name", "category", "status", "quantity"); // Specify only the columns we want
-
     if (inventories === 0) {
       return res.status(404).json({
         message: `Warehouse with ID ${req.params.id} not found`,
       });
     }
-
     res.json(inventories);
   } catch (error) {
     res.status(500).json({
@@ -142,13 +123,11 @@ const inventories = async (req, res) => {
     });
   }
 };
-
 module.exports = {
   index,
   update,
   inventories,
   getWarehousesById,
-  create, 
+  create,
   remove,
 };
-
