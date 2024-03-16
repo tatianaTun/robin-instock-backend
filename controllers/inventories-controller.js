@@ -12,7 +12,6 @@ const index = async (req, res) => {
       res.status(500).json(err);
   }
 }
-
 const add = async (req, res) => {
   if (
     !req.body.warehouse_id ||
@@ -116,7 +115,7 @@ const findOne = async (req, res) => {
     try {
         const record = await knex('inventories')
         .join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
-        .select("inventories.id","warehouse_name","item_name","description","category","status","quantity")
+        .select("inventories.id","warehouse_name","inventories.warehouse_id","item_name","description","category","status","quantity")
         .where({ "inventories.id": req.params.id }).first();
         if (!record) {
             return res.status(404).json({ message: "Inventory not found" });

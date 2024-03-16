@@ -22,7 +22,7 @@ const warehouseRoutes = require("./routes/warehouse-routes");
 // all inventories routes
 app.use("/inventories", inventoriesRoutes);
 // all warehouses routes
-app.use("/api/warehouses", warehouseRoutes);
+app.use("/warehouses", warehouseRoutes);
 app.listen(PORT, () => {
   console.log(`running at http://localhost:${PORT}`);
 });
