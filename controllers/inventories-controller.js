@@ -98,8 +98,40 @@ const updateInventoryById = async (req, res) => {
     });
   }
 };
+
+const deleteInventoryById = async (req, res) => {
+  try {
+      const deletedRows = await knex('inventories').where({ id: req.params.id }).delete();
+      if (deletedRows === 0) {
+          return res.status(404).json({ message: "Inventory not found" });
+      }
+      res.sendStatus(204);
+  } catch (err) {
+    
+      res.status(500).json(err);
+  }
+}
+
+const findOne = async (req, res) => {
+    try {
+        const record = await knex('inventories')
+        .join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
+        .select("inventories.id","warehouse_name","item_name","description","category","status","quantity")
+        .where({ "inventories.id": req.params.id }).first();
+        if (!record) {
+            return res.status(404).json({ message: "Inventory not found" });
+        }
+        res.status(200).json(record);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(error);
+    }
+}
+
 module.exports = {
+  findOne,
   add,
   updateInventoryById,
-  index
+  index,
+  deleteInventoryById
 };

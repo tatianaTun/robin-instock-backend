@@ -40,7 +40,6 @@ const remove = async (req, res) => {
         }
         res.sendStatus(204);
     } catch (err) {
-        console.error(err);
         res.status(500).json(err);
     }
 }
