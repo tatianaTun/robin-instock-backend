@@ -5,7 +5,7 @@ const index = async (req, res) => {
       // select inventories and join warehouses to get warehouse_name
       const inventories = await knex('inventories')
           .join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
-          .select("inventories.id","warehouse_name","item_name","description","category","status","quantity");
+          .select("inventories.id","warehouse_name","inventories.warehouse_id","item_name","description","category","status","quantity");
       res.status(200).json(inventories);
   } catch (err) {
       console.error(err);
@@ -115,7 +115,7 @@ const findOne = async (req, res) => {
     try {
         const record = await knex('inventories')
         .join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
-        .select("inventories.id","warehouse_name","item_name","description","category","status","quantity")
+        .select("inventories.id","warehouse_name","inventories.warehouse_id","item_name","description","category","status","quantity")
         .where({ "inventories.id": req.params.id }).first();
         if (!record) {
             return res.status(404).json({ message: "Inventory not found" });
