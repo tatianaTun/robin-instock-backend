@@ -4,14 +4,14 @@ const index = async (req, res) => {
   try {
       // select inventories and join warehouses to get warehouse_name
       const inventories = await knex('inventories')
-          .join('warehouses', 'warehouses.id', 'inventories.warehouse_id');
+          .join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
+          .select("inventories.id","warehouse_name","item_name","description","category","status","quantity");
       res.status(200).json(inventories);
   } catch (err) {
       console.error(err);
       res.status(500).json(err);
   }
 }
-
 const add = async (req, res) => {
   if (
     !req.body.warehouse_id ||
@@ -113,7 +113,10 @@ const deleteInventoryById = async (req, res) => {
 
 const findOne = async (req, res) => {
     try {
-        const record = await knex('inventories').where({ id: req.params.id }).first();
+        const record = await knex('inventories')
+        .join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
+        .select("inventories.id","warehouse_name","item_name","description","category","status","quantity")
+        .where({ "inventories.id": req.params.id }).first();
         if (!record) {
             return res.status(404).json({ message: "Inventory not found" });
         }
