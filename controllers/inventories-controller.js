@@ -4,8 +4,7 @@ const index = async (req, res) => {
   try {
       // select inventories and join warehouses to get warehouse_name
       const inventories = await knex('inventories')
-          .join('warehouses', 'warehouses.id', 'inventories.warehouse_id')
-          .select("inventories.id","warehouse_name","item_name","description","category","status","quantity");
+          .join('warehouses', 'warehouses.id', 'inventories.warehouse_id');
       res.status(200).json(inventories);
   } catch (err) {
       console.error(err);
